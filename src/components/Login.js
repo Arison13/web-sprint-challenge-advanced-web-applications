@@ -1,12 +1,66 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
+import { useHistory } from 'react-router';
 
 const Login = () => {
-    
+    const {push}= useHistory()
+
+    const [state, setState] = useState({
+        credentials:{
+            username: "",
+            password: ""
+        }
+    })
+    const [error, setError] = useState("");
+
+
+const handleChange = (e) => {
+    setState({
+        credentials: {
+            ...state.credentials,
+            [e.target.name]:e.target.value
+        }
+    });
+}
+const submit = (e) => {
+    e.preventDefault();
+    axios.post("http://localhost:5000/api/login", state.credentials)
+    .then(res => {
+        localStorage.setItem("token", res.data.token);
+        push("/view");
+  })
+  .catch(err=> {
+    setError("The Username or Password Are Wrong, Please Try Again");
+  })
+};
     return(<ComponentContainer>
         <ModalContainer>
             <h1>Welcome to Blogger Pro</h1>
             <h2>Please enter your account information.</h2>
+            <FormGroup onSubmit={submit}>
+                <Label> Enter Your Username
+                    <Input 
+                    id="username" 
+                    type="text"
+                    name="username"
+                    value={state.credentials.username} 
+                    onChange={handleChange}
+                    />
+                    
+                </Label>
+                <Label> Enter Your Password
+                    <Input 
+                    id="password"
+                    type="password"
+                    name="password"
+                    value={state.credentials.password}
+                    onChange={handleChange}
+                    />
+                </Label>
+                {error && <ErrorP id="error" className="error" > {error}</ErrorP>}
+                <Button id="submit">Submit</Button>
+            </FormGroup>
         </ModalContainer>
     </ComponentContainer>);
 }
@@ -54,4 +108,8 @@ const Input = styled.input`
 const Button = styled.button`
     padding:1rem;
     width: 100%;
+`
+const ErrorP = styled.p `
+    color:red;
+    text-decoration:underline;
 `
