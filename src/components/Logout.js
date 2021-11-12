@@ -9,16 +9,15 @@ const Logout = () => {
     useEffect(()=> {
         const token = localStorage.getItem("token");
         axiosWithAuth()
-        .post('http://localhost:5000/api/logout', {
-            headers: {
-                autherization:token
-            }
-        }).then(resp => {
-            localStorage.removeItem("token")
-            push('/login');
-        }).catch(err => {
-            console.error(err);
-        })
+            .post('/logout')
+            .then(resp => {
+                localStorage.removeItem('token');
+                console.log("working");
+                push('/login');
+            })
+            .catch(err => {
+                console.log(err)
+            }) 
     }, [])    
     return(<div></div>);
 }
