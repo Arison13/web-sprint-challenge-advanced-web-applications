@@ -39,13 +39,13 @@ const View = (props) => {
     }
     useEffect (()=> {
         axiosWithAuth()
-        .get('/articles')
-        .then(res => {
-            setArticles(res.data)
+            .get('/articles')
+                .then(res => {
+                    setArticles(res.data)
 
-        }).catch(err => {
-            console.log(err)
-        })
+                }).catch(err => {
+                    console.log(err)
+                })
         
 
         //i tried using articleService but i dont know what im doing wrong because it says its undefined.
