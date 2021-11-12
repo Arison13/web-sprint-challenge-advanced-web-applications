@@ -1,15 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-
+import { useParams } from 'react-router';
 import Article from './Article';
 import EditForm from './EditForm';
+import articleService from '../services/articleServices';
+import axiosWithAuth from '../utils/axiosWithAuth';
 
 const View = (props) => {
     const [articles, setArticles] = useState([]);
     const [editing, setEditing] = useState(false);
     const [editId, setEditId] = useState();
 
+    const { id } = useParams();
+
     const handleDelete = (id) => {
+        console.log("INSIDE DELTE")
+        axiosWithAuth()
+            .delete(`/articles/${id}`)
+                .then( res => {
+                    console.log(res)
+                    setArticles(res.data)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
     }
 
     const handleEdit = (article) => {
@@ -23,7 +37,21 @@ const View = (props) => {
     const handleEditCancel = ()=>{
         setEditing(false);
     }
+    useEffect (()=> {
+        axiosWithAuth()
+        .get('/articles')
+        .then(res => {
+            setArticles(res.data)
 
+        }).catch(err => {
+            console.log(err)
+        })
+        
+
+        //i tried using articleService but i dont know what im doing wrong because it says its undefined.
+        //if you can please let me know whats wrong, thank you 
+        // console.log(articleService())
+    }, [])
     return(<ComponentContainer>
         <HeaderContainer>View Articles</HeaderContainer>
         <ContentContainer flexDirection="row">
